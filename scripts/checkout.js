@@ -1,4 +1,8 @@
-import {cart, removeFromCart, updateCartQuantity} from "../data/cart.js";
+import {cart, 
+        removeFromCart, 
+        updateCartQuantity,
+        updateQuantity} 
+        from "../data/cart.js";
 import {products} from "../data/products.js"
 import {formatCurrency} from './utils/money.js'
 
@@ -45,8 +49,10 @@ cartSummaryHtml +=
               Update
             </span>
 
-            <input class="quantity-input">
-            <span class="save-quantity-link link-primary">Save</span>
+            <input class="quantity-input js-quantity-input-${matchingProduct.id}">
+            <span class="save-quantity-link link-primary js-save-link" data-product-id=${matchingProduct.id}>
+            Save
+            </span>
 
             <span class="delete-quantity-link link-primary js-delete-link js-delete-link" data-product-id="${matchingProduct.id}">
               Delete
@@ -136,7 +142,29 @@ document.querySelectorAll('.js-update-quantity-link')
 
     });
    
-  });
+  }
+);
+
+document.querySelectorAll('.js-save-link')
+  .forEach((link)=>{
+    link.addEventListener('click', ()=>{
+      const {productId} = link.dataset;
+
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.remove('is-editing-quantity');
+
+      const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+      const newQuantity = Number(quantityInput.value);
+
+      updateQuantity(productId, newQuantity);
+
+      const quantityLabel = container.querySelector('.quantity-label');
+      quantityLabel.innerHTML = newQuantity;
+
+      updateCartQuantity('.js-return-home-link', 'items');
+    });
+  }
+);
 
 
 

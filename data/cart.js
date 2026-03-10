@@ -31,7 +31,7 @@ export function addToCart (productId){
   );
   const quantity = Number(quantitySelector.value);
 
-  (matchingItem) ? matchingItem.quantity += quantity : cart.push({productId,quantity:1});
+  (matchingItem) ? matchingItem.quantity += quantity : cart.push({productId,quantity});
 
   saveToStorage();
 };
@@ -49,6 +49,7 @@ export function updateCartQuantity(selector = '.js-cart-quantity', text = '') {
 
   (text) ? element.innerHTML = `${cartQuantity} ${text}` : element.innerHTML = cartQuantity;
   
+  saveToStorage();
 }
 
 
@@ -64,4 +65,17 @@ export function removeFromCart(productId){
   cart = newCart;
 
   saveToStorage();
+};
+
+export function updateQuantity(productId, newQuantity){
+  let matchingItem;
+
+  cart.forEach((cartItem) => {
+    if (productId === cartItem.productId) {
+      matchingItem = cartItem;
+    }
+  });
+
+  matchingItem.quantity = newQuantity;
+
 };
