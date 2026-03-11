@@ -147,24 +147,35 @@ document.querySelectorAll('.js-update-quantity-link')
 
 document.querySelectorAll('.js-save-link')
   .forEach((link)=>{
-    link.addEventListener('click', ()=>{
-      const {productId} = link.dataset;
-
-      const container = document.querySelector(`.js-cart-item-container-${productId}`);
-      container.classList.remove('is-editing-quantity');
-
-      const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
-      const newQuantity = Number(quantityInput.value);
-
-      updateQuantity(productId, newQuantity);
-
-      const quantityLabel = container.querySelector('.quantity-label');
-      quantityLabel.innerHTML = newQuantity;
-
-      updateCartQuantity('.js-return-home-link', 'items');
+    link.addEventListener('click', () => {
+      saveEventListener(link);
     });
   }
 );
+
+
+
+function saveEventListener (link){
+  const {productId} = link.dataset;
+
+  const container = document.querySelector(`.js-cart-item-container-${productId}`);
+  container.classList.remove('is-editing-quantity');
+
+  const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+  const newQuantity = Number(quantityInput.value);
+
+  updateQuantity(productId, newQuantity);
+  
+  if (newQuantity >=0 && newQuantity < 1000) {
+  const quantityLabel = container.querySelector('.quantity-label');
+  quantityLabel.innerHTML = newQuantity;
+  }
+  else {
+    alert('Quantity must be at least 0 and less than 1000');
+  }
+
+  updateCartQuantity('.js-return-home-link', 'items');
+};
 
 
 
