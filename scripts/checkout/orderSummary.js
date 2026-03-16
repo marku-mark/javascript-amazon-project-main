@@ -2,21 +2,35 @@ import {cart,
         removeFromCart, 
         updateCartQuantity,
         updateQuantity,
-        updateDeliveryOption} 
+        updateDeliveryOption,
+        saveToStorage} 
         from "../../data/cart.js";
 import {products, getProduct} from "../../data/products.js"
 import {formatCurrency} from '../utils/money.js'
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import {deliveryOptions, getDeliveryOption} from "../../data/deliveryOptions.js";
 import {renderPaymentSummary} from "./paymentSummary.js";
+import {checkoutHeader} from "./checkoutHeader.js";
+
+checkoutHeader();
+renderOrderSummary();
 
 function deliveryOptionHTML(matchingProduct, cartItem) {
   let html = '';
 
   deliveryOptions.forEach((deliveryOption) => {
     const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
+    
+    let deliveryDays = deliveryOption.deliveryDays;
+    let deliveryDate = today.add(deliveryDays, 'days');
+    const dateString = deliveryDate.format('d'); 
+
+    if (dateString === '0') {
+      deliveryDate = deliveryDate.add(1, 'days'); 
+    } else if (dateString === '6') {
+      deliveryDate = deliveryDate.add(2, 'days'); 
+    }
+    const dateDelivery = deliveryDate.format('dddd, MMMM D');
 
     const priceString = deliveryOption.priceCents === 0
       ? 'FREE'
@@ -34,7 +48,7 @@ function deliveryOptionHTML(matchingProduct, cartItem) {
           name="delivery-option-${matchingProduct.id}">
         <div>
           <div class="delivery-option-date">
-            ${dateString}
+            ${dateDelivery}
           </div>
           <div class="delivery-option-price">
             ${priceString} Shipping
@@ -44,6 +58,7 @@ function deliveryOptionHTML(matchingProduct, cartItem) {
     `;
   });
 
+  saveToStorage();
   return html;
 }
 
@@ -61,7 +76,14 @@ export function renderOrderSummary() {
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
     const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+    let deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+    const dayOfWeek = deliveryDate.format('d');
+
+    if (dayOfWeek === '0') {
+      deliveryDate = deliveryDate.add(1, 'days');
+    } else if (dayOfWeek === '6') {
+      deliveryDate = deliveryDate.add(2, 'days');
+    }
     const dateString = deliveryDate.format('dddd, MMMM D');
 
     cartSummaryHtml += `

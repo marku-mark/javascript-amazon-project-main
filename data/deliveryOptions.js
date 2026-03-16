@@ -1,4 +1,4 @@
-export const deliveryOptions = [{
+export let deliveryOptions = [{
   id: '1',
   deliveryDays: 7,
   priceCents: 0,
@@ -23,3 +23,4 @@ export function getDeliveryOption(deliveryOptionId){
 });
   return deliveryOption || deliveryOptions[0];
 }
+
