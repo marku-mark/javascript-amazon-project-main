@@ -13,7 +13,6 @@ import {renderPaymentSummary} from "./paymentSummary.js";
 import {checkoutHeader} from "./checkoutHeader.js";
 
 checkoutHeader();
-renderOrderSummary();
 
 function deliveryOptionHTML(matchingProduct, cartItem) {
   let html = '';
