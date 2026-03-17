@@ -1,4 +1,4 @@
-import {formatCurrency} from '../scripts/utils/money.js'
+import {formatCurrency} from '../../scripts/utils/money.js'
 
 console.log('Test Suite: formatCurrency');
 (formatCurrency(2000.4) === '20.00') ?
