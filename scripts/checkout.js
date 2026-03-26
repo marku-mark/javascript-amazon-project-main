@@ -6,19 +6,39 @@ import {loadCarts} from "../data/cart.js";
 //import '../data/cart-class.js'
 //import '../data/backend-practice.js'
 
-Promise.all([
-  loadProductsFetch(),
-  new Promise((resolve)=>{
+// async await, put async before the function name to make the function return promise.
+// await can only use inside async function
+async function loadPage(){
+
+  await loadProductsFetch()
+
+  await new Promise((resolve)=>{
     loadCarts(()=>{
       resolve();
     })
   })
 
-]).then((value)=>{
   checkoutHeader();
   renderOrderSummary();
   renderPaymentSummary();
-});
+
+}
+
+loadPage()
+
+// Promise.all([
+//   loadProductsFetch(),
+//   new Promise((resolve)=>{
+//     loadCarts(()=>{
+//       resolve();
+//     })
+//   })
+
+// ]).then((value)=>{
+//   checkoutHeader();
+//   renderOrderSummary();
+//   renderPaymentSummary();
+// });
 
 // new Promise((resolve)=>{
 //     loadProducts(()=>{
@@ -43,7 +63,8 @@ Promise.all([
 //   }
 // );
 
-// callback for the loadProducts, it is the same as the new Promise or Promise
+
+// callback for the loadProducts, it is the same as the new Promise
 
 // loadProducts(()=>{
 //   loadCarts(()=>{
