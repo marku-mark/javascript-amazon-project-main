@@ -7,21 +7,30 @@ import {loadCarts} from "../data/cart.js";
 //import '../data/backend-practice.js'
 
 // async await, put async before the function name to make the function return promise.
-// await can only use inside async function
+// await can only be use inside async function, await must also close to the async function otherewise it will fail,if you create a function inside a async function and you put await inside that function it will not work, to use an await inside that function you need to put async before the function name.
+// try/catch code that handle errors
 async function loadPage(){
+  try {
+    // throw 'error 1'
 
-  await loadProductsFetch()
+    await loadProductsFetch()
 
-  await new Promise((resolve)=>{
-    loadCarts(()=>{
-      resolve();
+    // reject() is a function that creates an error in the future
+    await new Promise((resolve, reject)=>{
+      // throw 'error 2'
+      loadCarts(()=>{
+        //reject('error 3')
+        resolve();
+      })
     })
-  })
+    
+  } catch(error){
+    console.log('Unexpected error. Please try again later.')
+  }
 
   checkoutHeader();
   renderOrderSummary();
   renderPaymentSummary();
-
 }
 
 loadPage()
